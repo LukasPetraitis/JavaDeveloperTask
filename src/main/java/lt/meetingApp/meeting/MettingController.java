@@ -42,4 +42,6 @@ public class MettingController {
 		return meetingService.getAllMeetings();
 	}
 	
+	
+	
 }
