@@ -1,6 +1,8 @@
 package lt.meetingApp.meeting;
 
 import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -79,11 +81,53 @@ public class MeetingService {
 		
 		Employee employee = employeeService.getEmployeeById(employeeId);
 		
-		if(meetingRepository.meetingExists(meetingId) && employee != null) {
-			return meetingRepository.addEmployeeToMeeting(meetingId, employeeId);
+		if( employee == null) {
+			return EmployeeStatus.ERROR;
 		}
 		
-		return EmployeeStatus.ERROR;
+		Meeting meeting =  getAllMeetings()
+				.stream()
+				.filter(m -> m.getId()
+				.equals(meetingId))
+				.findFirst().get();
+		if(isPersonInMeeting(employee, meeting)) {
+			return EmployeeStatus.OCCUPIED;
+		}
+		if(meeting.getEmployeesAttending().contains(employeeId)) {
+			return EmployeeStatus.ALREADYADDED;
+		}
+		
+		
+		
+		return meetingRepository.addEmployeeToMeeting(meeting, employeeId);
+		
+	}
+
+	public boolean removeEmployeeFromMeeting(Integer meetingId, Integer employeeId) {
+		
+		return meetingRepository.removeEmployeeFromMeeting(meetingId, employeeId);	
+	}
+
+	private boolean isPersonInMeeting(Employee employee, Meeting meeting) {
+		List<Meeting> meetings = getAllMeetings();
+		
+		meetings = meetings.stream()
+				.filter(m -> m.getEmployeesAttending().contains(employee.getId()))
+				.collect(Collectors.toList());
+		
+		for(Meeting m : meetings) {
+			if(meeting.getStartDate().isBefore(m.getEndDate()) && meeting.getStartDate().isBefore(m.getStartDate())) {
+				continue;
+			}
+			else if(meeting.getEndDate().isAfter(m.getEndDate()) && meeting.getEndDate().isAfter(m.getStartDate())){
+				continue;
+			}
+			else {
+				return true;
+			}
+		}
+		
+		return false;
 	}
 
 	

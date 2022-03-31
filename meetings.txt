@@ -1,1 +1,3 @@
-{"id":1,"name":"meet","responsiblePersonId":3,"description":"Presentantion","category":"HUB","type":"LIVE","startDate":"2017-12-14 09:55:00","endDate":"2017-12-15 10:10:00","employeesAttending":[3,3]}
+{"id":2,"name":"meet","responsiblePersonId":1,"description":"representantion","category":"HUB","type":"LIVE","startDate":"2017-12-14 10:00:00","endDate":"2017-12-15 10:05:00","employeesAttending":[2]}
+{"id":1,"name":"meet","responsiblePersonId":3,"description":"Presentantion","category":"HUB","type":"LIVE","startDate":"2017-12-14 09:55:00","endDate":"2017-12-15 10:10:00","employeesAttending":[]}
+{"id":3,"name":"meet","responsiblePersonId":1,"description":"representantion","category":"CODEMONKEY","type":"LIVE","startDate":"2017-12-14 10:00:00","endDate":"2017-12-15 10:30:00","employeesAttending":[3,1]}

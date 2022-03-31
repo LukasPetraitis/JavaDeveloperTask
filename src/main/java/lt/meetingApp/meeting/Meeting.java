@@ -56,4 +56,9 @@ public class Meeting {
 		employeesAttending.add(employeeId);
 	}
 	
+	public void removeEmployee(Integer employeeId) {
+		employeesAttending.remove(employeeId);
+	}
+
+	
 }

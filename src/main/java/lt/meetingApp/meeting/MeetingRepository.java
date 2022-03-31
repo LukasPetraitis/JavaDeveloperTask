@@ -54,7 +54,6 @@ public class MeetingRepository {
 				
 				Meeting meeting = objectMapper.readValue(line, Meeting.class);
 				
-				System.out.println(meeting.toString());
 				meetings.add(meeting);
 			}
 			
@@ -118,22 +117,12 @@ public class MeetingRepository {
 				.equals(meetingId));
 	}
 
-	public EmployeeStatus addEmployeeToMeeting(Integer meetingId, Integer employeeId) {
-		
+	public EmployeeStatus addEmployeeToMeeting(Meeting meeting, Integer employeeId) {
 		
 		List<Meeting> meetings = getAllMeetings();
 		
-		Meeting meeting =  meetings
-				.stream()
-				.filter(m -> m.getId()
-				.equals(meetingId))
-				.findFirst().get();
+		meetings.removeIf(m -> m.getId().equals(meeting.getId()));
 		
-		meetings.removeIf(m -> m.getId().equals(meetingId));
-		
-		if(meeting.getEmployeesAttending().contains(employeeId)) {
-			return EmployeeStatus.ALREADYADDED;
-		}
 		meeting.addEmployee(employeeId);
 		
 		meetings.add(meeting);
@@ -160,6 +149,49 @@ public class MeetingRepository {
 		}
 		
 		return EmployeeStatus.ADDED;
+	}
+
+	public boolean removeEmployeeFromMeeting(Integer meetingId, Integer employeeId) {
+		
+		List<Meeting> meetings = getAllMeetings();
+		
+		Meeting meeting =  getAllMeetings()
+				.stream()
+				.filter(m -> m.getId()
+				.equals(meetingId))
+				.findFirst().get();
+		
+		if(meeting.getResponsiblePersonId().equals(employeeId)) {
+			return false;
+		}
+		
+		meetings.removeIf(m -> m.getId().equals(meeting.getId()));
+		
+		meeting.removeEmployee(employeeId);
+		
+		meetings.add(meeting);
+		
+		File file = new File("meetings.txt");
+		
+		ObjectMapper objectMapper = new ObjectMapper();
+		objectMapper.findAndRegisterModules();
+		
+		try {
+			Writer writer = 
+					new BufferedWriter( new FileWriter(file));
+			for(Meeting m : meetings) {
+				
+				String meetingJSON = objectMapper.writeValueAsString(m);
+			
+				writer.write(meetingJSON + "\n");
+			}
+				
+				writer.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
 	}
 	
 }

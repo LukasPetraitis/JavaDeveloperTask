@@ -73,19 +73,33 @@ public class MettingController {
 		EmployeeStatus employeeStatus = meetingService
 				.addEmployeeToMeeting(meetingId, employeeId);
 		
-		switch (employeeStatus) {
-			case ADDED:
-				return new ResponseEntity<String>("Added employee", HttpStatus.OK);
-			case ALREADYADDED:
-				return new ResponseEntity<String>("Employee already added", HttpStatus.ALREADY_REPORTED);
-			case OCCUPIED:
-				return new ResponseEntity<String>("Employee has another meeting", HttpStatus.NOT_MODIFIED);
-			case ERROR:
-				
+		if(employeeStatus.equals(EmployeeStatus.ADDED)) {
+			return new ResponseEntity<String>("Added employee", HttpStatus.OK);
+		}	
+		else if(employeeStatus.equals(EmployeeStatus.ALREADYADDED)){
+			return new ResponseEntity<String>("Employee already added", HttpStatus.ALREADY_REPORTED);
 		}
-		
-		return new ResponseEntity<String>("Something went wrong", HttpStatus.NOT_FOUND);
+		else if(employeeStatus.equals(EmployeeStatus.OCCUPIED)) {
+			return new ResponseEntity<String>("Employee has another meeting", HttpStatus.BAD_REQUEST);
+		}
+		else {
+			return new ResponseEntity<String>("Something went wrong", HttpStatus.NOT_FOUND);
+
+		}
 	}
 	
-	
+	@PutMapping("/{meetingId}/removeEmployee/{employeeId}")
+	public ResponseEntity<String> removeEmployeeFromMeeting(
+			@PathVariable Integer meetingId, 
+			@PathVariable Integer employeeId){
+		
+		boolean isRemoved = meetingService.removeEmployeeFromMeeting(meetingId, employeeId);
+		
+		if(isRemoved) {
+			return new ResponseEntity<String>("Employee removed", HttpStatus.OK);
+		}
+		
+		return new ResponseEntity<String>("you cannot remove employee responsible for the meeting", HttpStatus.NOT_FOUND);
+		
+	}
 }
