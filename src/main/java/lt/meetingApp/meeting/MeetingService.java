@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import lt.meetingApp.employee.Employee;
 import lt.meetingApp.employee.EmployeeService;
+import lt.meetingApp.fixedValues.EmployeeStatus;
 
 @Service
 @AllArgsConstructor
@@ -74,7 +75,7 @@ public class MeetingService {
 		return meeting;
 	}
 
-	public boolean addEmployeeToMeeting(Integer meetingId, Integer employeeId) {
+	public EmployeeStatus addEmployeeToMeeting(Integer meetingId, Integer employeeId) {
 		
 		Employee employee = employeeService.getEmployeeById(employeeId);
 		
@@ -82,7 +83,7 @@ public class MeetingService {
 			return meetingRepository.addEmployeeToMeeting(meetingId, employeeId);
 		}
 		
-		return false;
+		return EmployeeStatus.ERROR;
 	}
 
 	

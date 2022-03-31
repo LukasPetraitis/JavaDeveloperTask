@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.AllArgsConstructor;
+import lt.meetingApp.fixedValues.EmployeeStatus;
 
 @RestController
 @RequestMapping("meeting")
@@ -69,9 +70,21 @@ public class MettingController {
 			@PathVariable Integer meetingId, 
 			@PathVariable Integer employeeId){
 		
-		meetingService.addEmployeeToMeeting(meetingId, employeeId);
+		EmployeeStatus employeeStatus = meetingService
+				.addEmployeeToMeeting(meetingId, employeeId);
 		
-		return new ResponseEntity<String>("Added employee", HttpStatus.OK);
+		switch (employeeStatus) {
+			case ADDED:
+				return new ResponseEntity<String>("Added employee", HttpStatus.OK);
+			case ALREADYADDED:
+				return new ResponseEntity<String>("Employee already added", HttpStatus.ALREADY_REPORTED);
+			case OCCUPIED:
+				return new ResponseEntity<String>("Employee has another meeting", HttpStatus.NOT_MODIFIED);
+			case ERROR:
+				
+		}
+		
+		return new ResponseEntity<String>("Something went wrong", HttpStatus.NOT_FOUND);
 	}
 	
 	

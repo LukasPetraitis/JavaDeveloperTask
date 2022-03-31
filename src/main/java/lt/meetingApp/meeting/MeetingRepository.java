@@ -14,6 +14,8 @@ import org.springframework.stereotype.Repository;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import lt.meetingApp.fixedValues.EmployeeStatus;
+
 @Repository
 public class MeetingRepository {
 	
@@ -116,7 +118,8 @@ public class MeetingRepository {
 				.equals(meetingId));
 	}
 
-	public boolean addEmployeeToMeeting(Integer meetingId, Integer employeeId) {
+	public EmployeeStatus addEmployeeToMeeting(Integer meetingId, Integer employeeId) {
+		
 		
 		List<Meeting> meetings = getAllMeetings();
 		
@@ -128,6 +131,9 @@ public class MeetingRepository {
 		
 		meetings.removeIf(m -> m.getId().equals(meetingId));
 		
+		if(meeting.getEmployeesAttending().contains(employeeId)) {
+			return EmployeeStatus.ALREADYADDED;
+		}
 		meeting.addEmployee(employeeId);
 		
 		meetings.add(meeting);
@@ -150,10 +156,10 @@ public class MeetingRepository {
 				writer.close();
 		} catch (Exception e) {
 			e.printStackTrace();
-			return false;
+			return EmployeeStatus.ERROR;
 		}
 		
-		return true;
+		return EmployeeStatus.ADDED;
 	}
 	
 }
