@@ -8,6 +8,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.AllArgsConstructor;
+import lt.meetingApp.employee.Employee;
 import lt.meetingApp.employee.EmployeeService;
 
 @Service
@@ -41,9 +42,27 @@ public class MeetingService {
 		return meetingRepository.getAllMeetings();
 	}
 	
+	public boolean deleteMeeting(Integer meetingId, Integer employeeId) {
+		
+		Employee employee = employeeService.getEmployeeById(employeeId);
+		
+		Meeting meeting = (meetingRepository).getMeetingById(meetingId);
+		
+		
+			
+		if(employee != null && meeting != null) {
+			if(meeting.getResponsiblePersonId().equals(employee.getId())) {
+				meetingRepository.deleteMeeting(meetingId);
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	public Meeting produceMeeting(MeetingDTO meetingDTO) {
 
 		Meeting meeting = new Meeting(
+				meetingDTO.getId(),
 				meetingDTO.getName(), 
 				meetingDTO.getResponsiblePersonId(),
 				meetingDTO.getDescription(),
@@ -54,6 +73,8 @@ public class MeetingService {
 		
 		return meeting;
 	}
+
+	
 	
 	
 }

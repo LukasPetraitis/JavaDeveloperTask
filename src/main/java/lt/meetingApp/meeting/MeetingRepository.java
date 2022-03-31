@@ -64,5 +64,47 @@ public class MeetingRepository {
 		
 		return meetings;
 	}
+
+	public boolean deleteMeeting(Integer meetingId) {
+		
+		List<Meeting> meetings = getAllMeetings();
+		
+		meetings.removeIf(m -> m.getId().equals(meetingId));
+		
+		File file = new File("meetings.txt");
+		
+		ObjectMapper objectMapper = new ObjectMapper();
+		objectMapper.findAndRegisterModules();
+		
+		try {
+			Writer writer = 
+					new BufferedWriter( new FileWriter(file));
+			for(Meeting meeting : meetings) {
+				
+				String meetingJSON = objectMapper.writeValueAsString(meeting);
+			
+				writer.write(meetingJSON + "\n");
+			}
+				
+				writer.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+		
+		return false;
+	}
+
+	public Meeting getMeetingById(Integer meetingId) {
+		List<Meeting> meetings = getAllMeetings();
+		
+		Meeting meeting = meetings.stream()
+				.filter(m -> m.getId()
+				.equals(meetingId))
+				.findFirst()
+				.get();
+		
+		return meeting;
+	}
 	
 }

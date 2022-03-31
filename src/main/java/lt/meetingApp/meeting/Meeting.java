@@ -17,6 +17,7 @@ import lt.meetingApp.fixedValues.Type;
 @NoArgsConstructor
 public class Meeting {
 	
+	private Integer id;
 	private String name;
 	private Integer responsiblePersonId;
 	private String description;
@@ -28,14 +29,16 @@ public class Meeting {
 	private LocalDateTime endDate;
 	
 	public Meeting(
+			Integer id, 
 			String name, 
 			Integer responsiblePersonId, 
 			String description, 
-			Category category, 
-			Type type,
+			Category category,
+			Type type, 
 			LocalDateTime startDate, 
 			LocalDateTime endDate) {
 		super();
+		this.id = id;
 		this.name = name;
 		this.responsiblePersonId = responsiblePersonId;
 		this.description = description;
@@ -44,6 +47,8 @@ public class Meeting {
 		this.startDate = startDate;
 		this.endDate = endDate;
 	}
+	
+	
 	
 	
 }
