@@ -1,6 +1,8 @@
 package lt.meetingApp.meeting;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -27,6 +29,7 @@ public class Meeting {
 	private LocalDateTime startDate;
 	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
 	private LocalDateTime endDate;
+	private List<Integer> employeesAttending;
 	
 	public Meeting(
 			Integer id, 
@@ -46,9 +49,11 @@ public class Meeting {
 		this.type = type;
 		this.startDate = startDate;
 		this.endDate = endDate;
+		employeesAttending = new ArrayList<Integer>();
 	}
 	
-	
-	
+	public void addEmployee(Integer employeeId) {
+		employeesAttending.add(employeeId);
+	}
 	
 }

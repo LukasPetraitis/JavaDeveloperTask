@@ -107,4 +107,53 @@ public class MeetingRepository {
 		return meeting;
 	}
 	
+	public boolean meetingExists(Integer meetingId) {
+		List<Meeting> meetings = getAllMeetings();
+		
+		return meetings
+				.stream()
+				.anyMatch(m -> m.getId()
+				.equals(meetingId));
+	}
+
+	public boolean addEmployeeToMeeting(Integer meetingId, Integer employeeId) {
+		
+		List<Meeting> meetings = getAllMeetings();
+		
+		Meeting meeting =  meetings
+				.stream()
+				.filter(m -> m.getId()
+				.equals(meetingId))
+				.findFirst().get();
+		
+		meetings.removeIf(m -> m.getId().equals(meetingId));
+		
+		meeting.addEmployee(employeeId);
+		
+		meetings.add(meeting);
+		
+		File file = new File("meetings.txt");
+		
+		ObjectMapper objectMapper = new ObjectMapper();
+		objectMapper.findAndRegisterModules();
+		
+		try {
+			Writer writer = 
+					new BufferedWriter( new FileWriter(file));
+			for(Meeting m : meetings) {
+				
+				String meetingJSON = objectMapper.writeValueAsString(m);
+			
+				writer.write(meetingJSON + "\n");
+			}
+				
+				writer.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+		
+		return true;
+	}
+	
 }

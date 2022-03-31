@@ -46,7 +46,7 @@ public class MeetingService {
 		
 		Employee employee = employeeService.getEmployeeById(employeeId);
 		
-		Meeting meeting = (meetingRepository).getMeetingById(meetingId);
+		Meeting meeting = meetingRepository.getMeetingById(meetingId);
 		
 		
 			
@@ -72,6 +72,17 @@ public class MeetingService {
 				meetingDTO.getEndDate() );
 		
 		return meeting;
+	}
+
+	public boolean addEmployeeToMeeting(Integer meetingId, Integer employeeId) {
+		
+		Employee employee = employeeService.getEmployeeById(employeeId);
+		
+		if(meetingRepository.meetingExists(meetingId) && employee != null) {
+			return meetingRepository.addEmployeeToMeeting(meetingId, employeeId);
+		}
+		
+		return false;
 	}
 
 	
