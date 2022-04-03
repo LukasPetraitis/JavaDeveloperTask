@@ -1,6 +1,8 @@
 package lt.meetingApp.meeting;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale.Category;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
@@ -13,6 +15,7 @@ import lombok.AllArgsConstructor;
 import lt.meetingApp.employee.Employee;
 import lt.meetingApp.employee.EmployeeService;
 import lt.meetingApp.fixedValues.EmployeeStatus;
+import lt.meetingApp.fixedValues.Filter;
 
 @Service
 @AllArgsConstructor
@@ -97,10 +100,7 @@ public class MeetingService {
 			return EmployeeStatus.ALREADYADDED;
 		}
 		
-		
-		
-		return meetingRepository.addEmployeeToMeeting(meeting, employeeId);
-		
+		return meetingRepository.addEmployeeToMeeting(meeting, employeeId);		
 	}
 
 	public boolean removeEmployeeFromMeeting(Integer meetingId, Integer employeeId) {
@@ -126,8 +126,28 @@ public class MeetingService {
 				return true;
 			}
 		}
-		
 		return false;
+	}
+
+	public List<Meeting> getMeetingsByFilter(FilterDTO filterDTO) {
+		
+		List<Meeting> meetings = getAllMeetings();
+		
+		switch(filterDTO.getFilter()) {
+		case DESCRIPTION:
+			return meetings = meetings.stream()
+				.filter(m -> m.getDescription().equals(filterDTO.getByWhat()))
+				.collect(Collectors.toList());
+		case RESPONSIBLE_PERSON:
+			return meetings = meetings.stream()
+				.filter(m -> m.getResponsiblePersonId().equals((Integer.parseInt(filterDTO.getByWhat()))))
+				.collect(Collectors.toList());
+		case ATTENDEES:
+			return meetings = meetings.stream()
+				.filter(m ->  m.getEmployeesAttending().size() >= (Integer.parseInt(filterDTO.getByWhat())))
+				.collect(Collectors.toList());
+		}
+		return new ArrayList<Meeting>();
 	}
 
 	

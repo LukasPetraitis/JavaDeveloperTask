@@ -1,6 +1,10 @@
 package lt.meetingApp.meeting;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +16,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.AllArgsConstructor;
 import lt.meetingApp.fixedValues.EmployeeStatus;
@@ -102,4 +109,13 @@ public class MettingController {
 		return new ResponseEntity<String>("you cannot remove employee responsible for the meeting", HttpStatus.NOT_FOUND);
 		
 	}
+	
+	@GetMapping("/filter")
+	public  List<Meeting> filterMeetings(@RequestBody FilterDTO filterDTO){
+		
+		return meetingService.getMeetingsByFilter(filterDTO);
+		
+	}
+	
 }
+
